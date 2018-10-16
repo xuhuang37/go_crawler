@@ -48,6 +48,13 @@ func sum(numbers ...int) int{
 	return s
 }
 
+func swap(a,b *int){
+	*b,*a = *a,*b
+}
+func swap_2(a,b int)(int,int){
+	return b,a
+}
+
 func main() {
 	fmt.Println(eval(1, 9, "+"))
 	q,r := div(13,3)
@@ -56,5 +63,9 @@ func main() {
 		return int(math.Pow(float64(a),float64(b)))
 	}, 3, 4))
 	fmt.Println(sum(1,2,3,4,5,6,7,8,9,10))
+	a,b:=3,4
+	//swap(&a,&b)
+	a,b = swap_2(3,4)
+	fmt.Println(a,b)
 
 }
