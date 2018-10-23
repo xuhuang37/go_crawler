@@ -1,0 +1,4 @@
+package: go_crawler
+import:
+- package: golang.org/x/net/html/charset
+- package: golang.org/x/text/encoding

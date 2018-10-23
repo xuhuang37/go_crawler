@@ -1,4 +1,0 @@
-abcdef
-123456
-hello
-again
