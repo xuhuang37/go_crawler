@@ -11,7 +11,6 @@ import (
 var ageRe = regexp.MustCompile(`<td><span class="label">年龄：</span>([\d]+)岁</td>`)
 var heightRe = regexp.MustCompile(`<td><span class="label">身高：</span><span field="">([\d]+)CM</span></td>`)
 var weightRe = regexp.MustCompile(`<td><span class="label">体重：</span><span field="">([\d]+)KG</span></td>`)
-//var nameRe = regexp.MustCompile(`<a class="name fs24">([^<]+)</a>`)
 var genderRe = regexp.MustCompile(`<td><span class="label">月收入：</span>([^<]+)</td>`)
 var marriageRe = regexp.MustCompile(`<td><span class="label">婚况：</span>([^<]+)</td>`)
 var educationRe = regexp.MustCompile(`<td><span class="label">学历：</span>([^<]+)</td>`)
