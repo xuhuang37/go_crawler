@@ -1,12 +1,13 @@
 package engine
 
 import (
-	"fmt"
-	)
+		"sync"
+		)
 
 type ConcurrentEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int
+	ItemChan chan interface{}
 }
 
 type Scheduler interface {
@@ -21,8 +22,11 @@ type ReadyNotifier interface {
 } 
 
 func (e *ConcurrentEngine) Run(seeds ...Request) {
-
 	//in := make(chan Request)                  //创建请求通道
+	urlMap := UrlMap{
+		UrlList: map[string]int{},
+		Lock: &sync.RWMutex{},
+	}
 	out := make(chan ParseResult)             // 创建解析结果通道
 	//e.Scheduler.ConfigureMasterWorkerChan(in) // 传入请求通道 赋值给workerChan
 	e.Scheduler.Run()
@@ -36,9 +40,12 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	for {
 		result := <-out //消费out
 		for _, item := range result.Items {
-			fmt.Printf("Got Item: %v\n", item)
+			go func() { e.ItemChan <- item}()
 		}
-		for _, req := range result.Requests {
+		for i, req := range result.Requests {
+			if ok:=urlMap.Valid(req.Url,i);ok{
+				continue
+			}
 			e.Scheduler.Submit(req)
 		}
 	}

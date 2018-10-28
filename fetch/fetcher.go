@@ -13,11 +13,11 @@ import (
 )
 
 func Fetch(url string) ([]byte, error) {
-
 	client := http.Client{
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+	req.Close = true
 	resp,err:=client.Do(req)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,6 @@ func Fetch(url string) ([]byte, error) {
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("wrong status code:%d", resp.StatusCode)
 	}
-	fmt.Println(url)
 	bodyReader := bufio.NewReader(resp.Body)
 	e := determineEncoding(bodyReader)
 	utf8Reader := transform.NewReader(bodyReader, e.NewDecoder())
@@ -43,3 +42,5 @@ func determineEncoding(r *bufio.Reader) encoding.Encoding {
 	e, _, _ := charset.DetermineEncoding(bytes, "")
 	return e
 }
+
+

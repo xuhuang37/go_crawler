@@ -21,8 +21,6 @@ func (q *QueueScheduler) WorkerReady(w chan engine.Request) {
 		q.workerChan <- w
 }
 
-
-
 func (q *QueueScheduler) Run() {
 
 	q.requestChan = make(chan engine.Request)
