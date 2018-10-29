@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"go_crawler/model"
 	"log"
+	"fmt"
 )
 
 var ageRe = regexp.MustCompile(`<td><span class="label">年龄：</span>([\d]+)岁</td>`)
@@ -21,8 +22,9 @@ var HometownRe = regexp.MustCompile(`<td><span class="label">籍贯：</span>([^
 var ZodiacRe = regexp.MustCompile(`<td><span class="label">星座：</span><span field="">([^<]+)</span></td>`)
 var HouseRe = regexp.MustCompile(`<td><span class="label">住房条件：</span><span field="">([^<]+)</span></td>`)
 var CarRe = regexp.MustCompile(`<td><span class="label">是否购车：</span><span field="">([^<]+)</span></td>`)
+var idUrlRe = regexp.MustCompile(`http://album.zhenai.com/u/([\d]+)`)
 
-func ParseProfile(contents []byte, userName string) engine.ParseResult {
+func ParseProfile(contents []byte, url string, userName string) engine.ParseResult {
 	match := ageRe.FindSubmatch(contents)
 	profile := model.Profile{}
 	profile.Name = userName
@@ -62,8 +64,19 @@ func ParseProfile(contents []byte, userName string) engine.ParseResult {
 	profile.Zodiac = extractString(contents, ZodiacRe)
 	profile.House = extractString(contents, HouseRe)
 	profile.Car = extractString(contents, CarRe)
+	id:=extractString([]byte(url),idUrlRe)
+	if id==""{
+		fmt.Println("fail")
+	}
 	result := engine.ParseResult{
-		Items: []interface{}{profile},
+		Items: []engine.Item{
+			{
+				Url:     url,
+				Type:    "zhenai",
+				Id:      id,
+				Payload: profile,
+			},
+		},
 	}
 	return result
 

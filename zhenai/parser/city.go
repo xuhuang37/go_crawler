@@ -3,7 +3,7 @@ package parser
 import (
 	"go_crawler/engine"
 	"regexp"
-	)
+)
 
 var profileRe = regexp.MustCompile(`<a href="(http://album.zhenai.com/u/[\d]+)"[^>]+>([^<]+)</a>`)
 var cityUrlRe = regexp.MustCompile(`href="(http://www.zhenai.com/zhenghun/[^"]+)"`)
@@ -17,17 +17,17 @@ func ParseCity(contents []byte) engine.ParseResult {
 		req := engine.Request{
 			Url: profileUrl,
 			ParserFunc: func(contents []byte) engine.ParseResult {
-				result := ParseProfile(contents, userName)
+				result := ParseProfile(contents, profileUrl, userName)
 				return result
 			},
 		}
 		result.Requests = append(result.Requests, req)
 	}
-	matches = cityUrlRe.FindAllSubmatch(contents,-1)
+	matches = cityUrlRe.FindAllSubmatch(contents, -1)
 
-	for _,m :=range matches{
-		result.Requests = append(result.Requests,engine.Request{
-			Url:string(m[1]),
+	for _, m := range matches {
+		result.Requests = append(result.Requests, engine.Request{
+			Url: string(m[1]),
 			ParserFunc: func(content []byte) engine.ParseResult {
 				return ParseCity(content)
 			},
@@ -35,4 +35,3 @@ func ParseCity(contents []byte) engine.ParseResult {
 	}
 	return result
 }
-

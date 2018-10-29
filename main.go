@@ -8,10 +8,14 @@ import (
 )
 
 func main() {
+	itemChan,err:= Persist.ItemSaver()
+	if err!=nil{
+		panic(err)
+	}
 	e:=&engine.ConcurrentEngine{
 		Scheduler:&scheduler.SimpleScheduler{},
 		WorkerCount:10,
-		ItemChan:Persist.ItemSaver(),
+		ItemChan:itemChan,
 	}
 	e.Run(engine.Request{
 		Url:        "http://www.zhenai.com/zhenghun/",

@@ -9,22 +9,30 @@ type Request struct {
 
 type ParseResult struct {
 	Requests []Request
-	Items     []interface{}
+	Items    []Item
 }
 
+type Item struct {
+	Url     string
+	Id      string
+	Type    string
+	Payload interface{}
+}
+
+// 去重映射
 type UrlMap struct {
 	UrlList map[string]int
-	Lock *sync.RWMutex
+	Lock    *sync.RWMutex
 }
 
-func  (u *UrlMap)Valid(k string,v int) bool{
+func (u *UrlMap) Valid(k string, v int) bool {
 	u.Lock.Lock()
 	defer u.Lock.Unlock()
-	_,ok:=u.UrlList[k]
+	_, ok := u.UrlList[k]
 	if !ok {
 		u.UrlList[k] = v
 		return false
-	}else{
+	} else {
 		return true
 	}
 }
